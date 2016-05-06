@@ -18,6 +18,11 @@ namespace BusTrafficDataPreProcessing
             InitializeComponent();
         }
 
+        /// <summary>
+        /// 保存车辆单条行程数据到本地默认文件(替换文件)
+        /// </summary>
+        /// <param name="theList"></param>
+        /// <returns></returns>
         private void ListToCsv(List<BusData> theList)
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter(@"BusDataList.csv", false, Encoding.UTF8);
@@ -30,6 +35,11 @@ namespace BusTrafficDataPreProcessing
             file.Close();
         }
 
+        /// <summary>
+        /// 保存统计行程数据到本地默认文件(替换文件)
+        /// </summary>
+        /// <param name="theList"></param>
+        /// <returns></returns>
         private void ListToCsv(List<BusTripTime> theList)
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter(@"TripTimeList.csv", false, Encoding.UTF8);
@@ -48,12 +58,13 @@ namespace BusTrafficDataPreProcessing
 
             SqlClient myClient = new SqlClient();
             var BusDataList = myClient.ReadBusData(cmdString);
-            BusDataList.Sort((x, y) => { return x.DateAndTime.CompareTo(y.DateAndTime)*2 + x.DLZ.CompareTo(y.DLZ); });
+            BusDataList.Sort((x, y) => { return x.DateAndTime.CompareTo(y.DateAndTime)*2 + x.DLZ.CompareTo(y.DLZ); }); //二次排序,时间为第一指标,到离站方向为第二指标
 
+            //原始车辆数据保存到本地
             ListToCsv(BusDataList);
 
             List<BusTripTime> tripTimeList = new List<BusTripTime>();
-            BusData lastBusData = new BusData();
+            BusData lastBusData = new BusData();//用于存储一次车辆行程信息,用于在迭代中和另一条比较
             foreach (BusData bd in BusDataList)
             {
                 if (bd.DLZ == "到站" && lastBusData.DLZ == "离站")
@@ -73,6 +84,7 @@ namespace BusTrafficDataPreProcessing
                 lastBusData = bd;
             }
 
+            //行程时间数据保存到本地
             ListToCsv(tripTimeList);
         }
     }

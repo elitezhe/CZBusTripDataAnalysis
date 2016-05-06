@@ -42,6 +42,13 @@ namespace BusTrafficDataPreProcessing
             myCommand.Connection = myConnection;  // link myCommand to the database connection
         }
 
+        /// <summary>
+        /// 执行SQL语句从数据库中读取车辆行程信息
+        /// <para>本方法不够稳健,需要SQL语句满足一定条件</para>
+        /// <para>参考语句:SELECT * FROM [CZ].[dbo].[BusData] WHERE XL=25 AND CL=18138 AND (ZDM='红梅新村' OR ZDM='白云公交站')  ORDER BY SJ</para>
+        /// </summary>
+        /// <param name="SQLCmdString"></param>
+        /// <returns></returns>
         public List<BusData> ReadBusData(string SQLCmdString)
         {
             

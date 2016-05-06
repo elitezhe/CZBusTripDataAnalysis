@@ -47,6 +47,10 @@ namespace BusTrafficDataPreProcessing
             YYLX = null;
         }
 
+        /// <summary>
+        /// 生成对象的输出字符串,结尾包含\n,输出或写入文件时使用write,而不是writeline
+        /// </summary>
+        /// <returns></returns>
         public string ToCsvString()
         {
             string line = XL+"," + CL + "," + SJ + "," + JD + "," + WD + "," + SD + "," + FXJ + "," + DLZ + "," + ZDM + "," + YYLX + "\n";

@@ -54,11 +54,15 @@ namespace BusTrafficDataPreProcessing
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string cmdString = @"SELECT * FROM [CZ].[dbo].[BusData] WHERE XL=25 AND CL=18138 AND (ZDM='红梅新村' OR ZDM='白云公交站')  ORDER BY SJ";
+            //string cmdString = @"SELECT * FROM [CZ].[dbo].[BusData] WHERE XL=25 AND CL=18138 AND (ZDM='红梅新村' OR ZDM='白云公交站')  ORDER BY SJ";
+            string cmdString = @"SELECT * FROM [CZ].[dbo].[BusData] WHERE XL=25 AND (ZDM='红梅新村' OR ZDM='白云公交站')  ORDER BY SJ";
 
             SqlClient myClient = new SqlClient();
             var BusDataList = myClient.ReadBusData(cmdString);
-            BusDataList.Sort((x, y) => { return x.DateAndTime.CompareTo(y.DateAndTime)*2 + x.DLZ.CompareTo(y.DLZ); }); //二次排序,时间为第一指标,到离站方向为第二指标
+            BusDataList.Sort((x, y) => 
+            {
+                return x.CL.CompareTo(y.CL) * 4 + x.DateAndTime.CompareTo(y.DateAndTime)*2 + x.DLZ.CompareTo(y.DLZ);
+            }); //二次排序,时间为第一指标,到离站方向为第二指标
 
             //原始车辆数据保存到本地
             ListToCsv(BusDataList);
@@ -76,6 +80,9 @@ namespace BusTrafficDataPreProcessing
                         aTripTime.FinishStation = bd.ZDM;
                         aTripTime.StartTime = lastBusData.DateAndTime;
                         aTripTime.FinishTime = bd.DateAndTime;
+                        aTripTime.XL = bd.XL;
+                        aTripTime.CL = bd.CL;
+                        aTripTime.YYLX = bd.YYLX;
 
                         tripTimeList.Add(aTripTime);
                     }
@@ -86,6 +93,7 @@ namespace BusTrafficDataPreProcessing
 
             //行程时间数据保存到本地
             ListToCsv(tripTimeList);
+            textBox1.AppendText("运行完毕!");
         }
     }
 }

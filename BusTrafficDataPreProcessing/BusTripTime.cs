@@ -8,6 +8,9 @@ namespace BusTrafficDataPreProcessing
 {
     class BusTripTime
     {
+        public string XL; //与数据库中对应
+        public string CL; //与数据库中对应
+        public string YYLX;
         public string StartStation;
         public string FinishStation;
         public DateTime StartTime;
@@ -32,7 +35,7 @@ namespace BusTrafficDataPreProcessing
         /// <returns></returns>
         public string ToCsvString()
         {
-            return StartTime +","+ StartStation + "," + FinishTime + "," + FinishStation + "," + GetTripTime()+"\n";
+            return XL + "," + CL + ","+ YYLX + "," + StartTime +","+ StartStation + "," + FinishTime + "," + FinishStation + "," + GetTripTime()+"\n";
         }
     }
 }
